@@ -24,24 +24,21 @@ class Country(models.Model):
         verbose_name = "Country"
         verbose_name_plural = "Countries"
 
-
 class PIR(models.Model):
-    PIR_number = models.CharField(
-        verbose_name='PIR Number', max_length=10, help_text='Enter the PIR value')
+    PIR_number = models.CharField('PIR Number and Value', max_length=50, blank=True)
     description = models.CharField(max_length=40, help_text='Describe the PIR')
-
     class Meta:
         verbose_name = "PIR"
         verbose_name_plural = "PIR"
-
     def __str__(self):
         return self.PIR_number
 
 
 class event_type(models.Model):
-    event_type = models.CharField(
-        max_length=40, help_text='Write the type of event, e.g. IED, protest, ambush, etc')
-
+    event_type = models.CharField(max_length=40, help_text='Write the type of event, e.g. IED, protest, ambush, etc')
+    class Meta:
+        verbose_name = "Type of Event"
+        verbose_name_plural = "Type of Event"
     def __str__(self):
         return self.event_type
 
@@ -57,7 +54,7 @@ class Source(models.Model):
     source_name = models.CharField(verbose_name='Source name', max_length=40)
     reliability = models.CharField(
         verbose_name='Reliability level', max_length=40, choices=rel, blank=True)
-    Nationality = models.ForeignKey(
+    nationality = models.ForeignKey(
         Country, on_delete=models.CASCADE, null=True)
 
     def get_absolute_url(self):
@@ -66,21 +63,7 @@ class Source(models.Model):
 
     def __str__(self):
         """String for representing the Model object"""
-        return f'{self.source_name}'
-
-
-class Category(models.Model):
-    cat = models.CharField(max_length=50)
-
-    class Meta:
-        verbose_name_plural = "Category"
-
-    def get_absolute_url(self):
-        return reverse(logger: categories, args=[self.cat])
-
-    def __str__(self):
-        return self.cat
-
+        return self.source_name
 
 class Traffic(models.Model):
     """Class that takes a piece of traffic and adds it to the database"""
@@ -96,19 +79,16 @@ class Traffic(models.Model):
     traffic_slug = models.SlugField(max_length=250,
                                     unique_for_date='docdate')
     docdate = models.DateTimeField(default=timezone.now)
-    category = models.ForeignKey('Category',
-                                 on_delete=models.CASCADE, null=True)
-    fulltext = models.TextField(
-        help_text='Enter the full traffic text if possible')
-    grids = models.CharField(max_length=40,
-                             help_text='Assign grid location', blank=True)
-    source = models.ForeignKey('Source',
-                               on_delete=models.CASCADE,
-                               null=True, blank=True)
-    PIR = models.ForeignKey('PIR',
+    category = models.ForeignKey(event_type,
+                                 on_delete=models.CASCADE, blank=True, null=True)
+    fulltext = models.TextField(help_text='Enter the full traffic text if possible')
+    grids = models.CharField(max_length=40, help_text='Assign grid location', 
+                            blank=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE,
+                               blank=True, null=True)
+    PIR = models.ForeignKey(PIR, blank=True, 
                             on_delete=models.CASCADE)
-    status = models.CharField(max_length=10,
-                              choices=STATUS_CHOICES,
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES,
                               default='to_verify')
 
     #completed = CompletedManager()
@@ -126,11 +106,9 @@ class Traffic(models.Model):
     def get_absolute_url(self):
         """Returns the url to access an instance of a model."""
         return reverse('logger:traffic_detail',
-                       args=[self.traffic_slug,
-                             self.docdate.year,
+                       args=[self.docdate.year,
                              self.docdate.month,
-                             self.docdate.day,
-                             self.docdate.hour])
+                             self.docdate.day, self.traffic_slug])
 
 
 class Organizations(models.Model):
@@ -143,32 +121,35 @@ class Organizations(models.Model):
     def __str__(self):
         return self.name_org
 
-
 class Equipment(models.Model):
     name = models.CharField(
         max_length=40, help_text='Please enter the name of the piece of equipment observed')
-    EqClass = models.CharField(
-        max_length=40, help_text='Write the class for this piece of equipment (e.g. MBT, APC, IFV, etc.)')
+    role = models.CharField(max_length=40, 
+                            help_text='Write the role for this piece of equipment (e.g. MBT, APC, IFV, etc.)',
+                            blank=True)
     # An equipment can belong to one or many organizations
     unit = models.ManyToManyField(Organizations)
-    origin_manufacture = models.ForeignKey(
-        'Country', on_delete=models.SET_NULL, null=True)
+    origin_manufacture = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
-
 class EventMatrix(models.Model):
+    """
+    This database in theory should display an event matrix, however I'm thinking of making this into a 
+    view instead
+    """
     reference = models.ForeignKey(
         "Traffic", on_delete=models.SET_NULL, null=True)
     event = models.ForeignKey(
         "event_type", on_delete=models.SET_NULL, null=True)
-    #actor_1 = models.ManyToManyField(Organizations)
-    #actor_2 = models.ManyToManyField(Organizations)
+    actor_1 = models.ForeignKey(Organizations, on_delete=models.CASCADE,
+                               blank=True, null=True, related_name='attacker')
+    actor_2 = models.ForeignKey(Organizations, on_delete=models.CASCADE,
+                               blank=True, null=True, related_name='victim')
     location = models.CharField(max_length=40)
     deceased = models.IntegerField()
     wounded = models.IntegerField()
-
     class Meta():
         verbose_name_plural = "Event Matrix"
 
