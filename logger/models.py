@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.text import slugify
 
 # Class for Casualties report?
 
@@ -31,7 +32,7 @@ class PIR(models.Model):
         verbose_name = "PIR"
         verbose_name_plural = "PIR"
     def __str__(self):
-        return self.PIR_number
+        return f'{self.PIR_number} - {self.description}'
 
 
 class event_type(models.Model):
@@ -66,7 +67,11 @@ class Source(models.Model):
         return self.source_name
 
 class Traffic(models.Model):
-    """Class that takes a piece of traffic and adds it to the database"""
+    """Class that takes a piece of traffic and adds it to the database
+        If you wish to make the url more time-specific, uncomment the 
+        args[] at the bottom and add 
+        <int:year>/<int:month>/<int:day>/<slug:traffic_post>/ pattern to urls.py
+    """
     STATUS_CHOICES = (
         ('live', 'Live'),
         ('completed', 'Completed'),
@@ -90,6 +95,11 @@ class Traffic(models.Model):
                             on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES,
                               default='to_verify')
+    def save(self, *args, **kwargs):
+        self.traffic_slug = slugify(self.docname)
+        super(Traffic, self).save(*args, **kwargs)
+    
+
 
     #completed = CompletedManager()
     #verify = VerifyManager()
@@ -101,14 +111,15 @@ class Traffic(models.Model):
 
     def __str__(self):
         """String for representing the Traffic model object"""
-        return self.docname
+        return f'{self.id} - {self.docname}'
 
     def get_absolute_url(self):
         """Returns the url to access an instance of a model."""
         return reverse('logger:traffic_detail',
-                       args=[self.docdate.year,
-                             self.docdate.month,
-                             self.docdate.day, self.traffic_slug])
+                       args=[# self.docdate.year,
+                             # self.docdate.month,
+                             # self.docdate.day, 
+                             self.traffic_slug])
 
 
 class Organizations(models.Model):

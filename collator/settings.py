@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'logger',
-    'django_extensions'
+    'django_extensions',
+    'django_tables2',
+    'crispy_forms',
+    'bootstrap4',
+    'bootstrap_datepicker_plus'
 ]
 
 MIDDLEWARE = [
@@ -64,11 +68,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
 ]
-
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 WSGI_APPLICATION = 'collator.wsgi.application'
 
 # Database

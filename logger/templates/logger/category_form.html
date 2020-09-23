@@ -1,0 +1,11 @@
+{% extends "logger/base.html" %}
+
+{% block content %}
+<div class = "container">
+	<h1>Category Form</h1>
+	<form method = 'POST' action= '' enctype = "multipart/form-data" novalidate id = "author-form">{% csrf_token %}
+		{{form.as_p}}
+		<input type="submit" value = "Submit" />
+	</form>
+</div>
+{% endblock %}
