@@ -1,9 +1,9 @@
 {% extends "logger/base.html" %}
 {% block title %}{{ traffic_post.docname }}{% endblock %}
 {% block content %}
-  <h1>{{ traffic_post.docname }}</h1>
-  <p class="date">
-    Published {{ traffic_post.docdate }}
-  </p>
-  {{ traffic_post.fulltext|linebreaks }}
+<h1>{{ traffic_post.docname }}</h1>
+<p class="date">
+  Published {{ traffic_post.docdate }}
+</p>
+{{ traffic_post.fulltext|linebreaks }}
 {% endblock %}

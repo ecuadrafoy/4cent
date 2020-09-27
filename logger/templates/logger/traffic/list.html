@@ -1,16 +1,18 @@
 {% extends "logger/base.html" %}
 {% block title %}Traffic Log Sheet{% endblock %}
 {% block content %}
-  <h1>Traffic Log Sheet</h1>
-  {% for traffic in traffics %}
-    <h2>
-      <a href="{{ traffic.get_absolute_url }}">
-        {{ traffic.docname}}
-      </a>
-    </h2>
-    <p class="date">
-      Published {{ traffic.docdate }}
-    </p>
-    {{ traffic.fulltext|truncatewords:30|linebreaks }}
-  {% endfor %}
+<h1>Traffic Log Sheet</h1>
+{% for traffic in traffics %}
+<h2>
+  <li>
+    <a href="{{ traffic.get_absolute_url }}">
+      {{ traffic.docname}}
+    </a>
+  </li>
+</h2>
+<p class="date">
+  Published {{ traffic.docdate }}
+</p>
+{{ traffic.fulltext|truncatewords:30|linebreaks }}
+{% endfor %}
 {% endblock %}

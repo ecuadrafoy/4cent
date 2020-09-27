@@ -35,16 +35,17 @@ def add_traffic(request):
         if form.is_valid():
             try:
                 form.save()
-                return HttpResponseRedirect(reverse('add_traffic'))
+                return HttpResponseRedirect(reverse('logger:add_traffic'))
             except:
                 pass
         else:
             return render(request, 'logger/submit.html',
-                        {'form':form})
+                          {'form':form})
     # If the form is invalid, show empty form
     else:
         form = TrafficForm()
-    return render(request, 'logger/submit.html', {'form': form})
+    return render(request, 'logger/submit.html', 
+                  {'form': form})
 
 def EventCreatePop(request):
     form = CategoryForm(request.POST or None)
@@ -63,4 +64,5 @@ def get_cat_id(request):
         data = {'event_id' : event_id}
         return HttpResponse(json.dumps(data), content_type = 'application/json')
     return HttpResponse('/')
+
 
