@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+from django.utils import timezone
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django_tables2',
     'crispy_forms',
     'bootstrap4',
-    'bootstrap_datepicker_plus'
+    'bootstrap_datepicker_plus',
+    'taggit',
 ]
 
 MIDDLEWARE = [

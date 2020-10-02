@@ -6,7 +6,7 @@ from .models import Traffic, event_type
 class TrafficForm(ModelForm):
     class Meta:
         model = Traffic
-        fields = ('docname', 'docdate','category','grids', 'source', 'PIR', 'status','fulltext',)
+        fields = ('docname', 'docdate','category','grids', 'source', 'PIR', 'status','fulltext','tags',)
         help_texts={
             'docname': None,
             'grids': None,
@@ -17,6 +17,7 @@ class TrafficForm(ModelForm):
             'docdate': ('Date of the Document'),
             'grids': ('Coordinates'),
             'fulltext': ('Content'),
+            'tags': ('Tags'),
 
         }
         widgets = {
@@ -24,6 +25,7 @@ class TrafficForm(ModelForm):
             'grids': TextInput(attrs={'placeholder': 'Write coordinates (MGRS)'}),
             'docdate': DateTimePickerInput(),
             'fulltext': Textarea(attrs={'placeholder': 'Enter the full traffic text if possible'}),
+            'tags': TextInput(attrs={'data-role': 'tagsinput'})
          
         }
 

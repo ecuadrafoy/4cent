@@ -9,4 +9,4 @@ class TrafficTable(tables.Table):
     class Meta:
         model = Traffic
         template_name = "django_tables2/bootstrap4.html"
-        fields = ('docname', 'docdate','category', 'PIR', 'status','source', 'fulltext' )
+        fields = ('docname', 'docdate','category', 'PIR', 'source','status',)

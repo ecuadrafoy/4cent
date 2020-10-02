@@ -2,7 +2,9 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+import datetime
 
+from taggit.managers import TaggableManager
 # Class for Casualties report?
 
 
@@ -67,7 +69,8 @@ class Source(models.Model):
         return self.source_name
 
 class Traffic(models.Model):
-    """Class that takes a piece of traffic and adds it to the database
+    """
+        Class that takes a piece of traffic and adds it to the database
         If you wish to make the url more time-specific, uncomment the 
         args[] at the bottom and add 
         <int:year>/<int:month>/<int:day>/<slug:traffic_post>/ pattern to urls.py
@@ -83,7 +86,7 @@ class Traffic(models.Model):
                                default="")
     traffic_slug = models.SlugField(max_length=250,
                                     unique_for_date='docdate')
-    docdate = models.DateTimeField(default=timezone.now)
+    docdate = models.DateTimeField(default=datetime.datetime.now())
     category = models.ForeignKey(event_type,
                                  on_delete=models.CASCADE, blank=True, null=True)
     fulltext = models.TextField(help_text='Enter the full traffic text if possible')
@@ -95,6 +98,7 @@ class Traffic(models.Model):
                             on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES,
                               default='to_verify')
+    tags = TaggableManager(blank=True)
     def save(self, *args, **kwargs):
         self.traffic_slug = slugify(self.docname)
         super(Traffic, self).save(*args, **kwargs)

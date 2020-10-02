@@ -1,18 +1,35 @@
 {% extends "logger/base.html" %}
-{% block title %}Traffic Log Sheet{% endblock %}
+
 {% block content %}
-<h1>Traffic Log Sheet</h1>
-{% for traffic in traffics %}
-<h2>
-  <li>
-    <a href="{{ traffic.get_absolute_url }}">
-      {{ traffic.docname}}
-    </a>
-  </li>
-</h2>
-<p class="date">
-  Published {{ traffic.docdate }}
-</p>
-{{ traffic.fulltext|truncatewords:30|linebreaks }}
-{% endfor %}
-{% endblock %}
+<div class="container pt-5">
+  <p> Common Tags:
+    {% for mt in common_tags %}
+    <a href="{% url 'logger:tagged_traffic' tag.slug %}" class="badge badge=success"> {{mt}} <a>
+        {% endfor %}
+  </p>
+  <div class="row mb-2 posts">
+    {% for traffic in traffics %}
+    <div class="col-md-6">
+      <div class="cards">
+        <div class="row no-gutters border rounded  flex-md-row mb-4 shadow-sm h-md-250">
+          <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="my-1"><a href="{% url 'logger:traffic_detail' traffic.traffic_slug %}">{{traffic.docname}}</a>
+            </h3>
+            <h6> {{traffic.PIR}} </h5>
+            <div style="display:flex">
+              {% for tag in traffic.tags.all %}
+              <a href="{% url 'logger:tagged_traffic' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+              {% endfor %}
+            </div>
+            <p class="mb-auto">{{post.description}}</p>
+            <p class="mb-auto text-muted">{{post.published}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock content %}

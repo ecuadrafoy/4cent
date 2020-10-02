@@ -1,11 +1,23 @@
 {% extends "logger/base.html" %}
 
 {% block content %}
-<div class = "container">
+<div class="container">
 	<h1>Category Form</h1>
-	<form method = 'POST' action= '' enctype = "multipart/form-data" novalidate id = "author-form">{% csrf_token %}
+	<form method='POST' action='' enctype="multipart/form-data" novalidate id="author-form">{% csrf_token %}
 		{{form.as_p}}
-		<input type="submit" value = "Submit" />
+		<input type="submit" value="Submit" />
 	</form>
 </div>
+{% endblock %}
+<!-- This will refresh the parent site-->
+{% block script %}
+
+<script>
+	window.onunload = refreshParent;
+
+	function refreshParent() {
+		window.opener.location.reload();
+	}
+</script>
+
 {% endblock %}

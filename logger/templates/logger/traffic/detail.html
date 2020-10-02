@@ -1,9 +1,61 @@
 {% extends "logger/base.html" %}
-{% block title %}{{ traffic_post.docname }}{% endblock %}
+{% load static %}
+{% block title %}
+{{ traffic_post.docname }}
+{% endblock %}
 {% block content %}
-<h1>{{ traffic_post.docname }}</h1>
-<p class="date">
-  Published {{ traffic_post.docdate }}
-</p>
-{{ traffic_post.fulltext|linebreaks }}
+<!--Page Content-->
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-3">
+      <img class="img-fluid" , src="{% static "images/No_image_available.png" %}">
+    </div>
+    <div class="col-lg-8">
+      <h2 class="mt-4">{{ traffic_post.docname }}
+        <hr>
+        <p>
+          <small> {{ traffic_post.docdate }} </small>
+        </p>
+      </h2>
+      <h5>
+        <p>This traffic answers {{ traffic_post.PIR }} </p>
+        {% if traffic_post.status == 'completed' %}
+        Status for this traffic is currently: <p class="text-white bg-dark">{{ traffic_post.status }} </p>
+        {% elif traffic_post.status == 'live' %}
+        Status for this traffic is currently: <p class="text-danger">{{ traffic_post.status }} </p>
+        {% else %}
+        Status for this traffic is currently: <p class="text-warning">{{ traffic_post.status }} </p>
+        {% endif %}
+
+      </h5>
+      <hr>
+      <p class="tags">
+        Tags:
+        {% for tag in traffic_post.tags.all %}
+        <a href="{% url "logger:tagged_traffic" tag.slug %}" class="badge badge-info"> {{ tag }}</a>
+        {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+      <p>
+        {% if traffic_post.grids %}Coordinates at: {{ traffic_post.grids }} {% else %}
+        Coordinates not submitted for this traffic
+        {% endif %}
+      </p>
+      <p>
+        Source for this information is: {{ traffic_post.source }}
+      </p>
+      <p class="lead">
+        {{ traffic_post.fulltext }}
+      </p>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
