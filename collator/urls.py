@@ -15,15 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 from django.conf.urls import url
 from logger.views import TrafficListView, add_traffic, EventCreatePop, get_cat_id
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('logger/', include('logger.urls', namespace='logger')),
+    path('account/', include('login.urls')),
+    path('logger/', include(('logger.urls', 'logger'), namespace='logger')),
     # path('traffic/', TrafficListView.as_view(), name='log_sheet'),
     # path('submit/', add_traffic, name='add_traffic'), # For some reason if I erase this path, the one from logger/urls.py won't work
     url(r'create_cat/', EventCreatePop, name = 'CategoryCreate'),
     url(r'^category/ajax/get_cat_id', get_cat_id, name = "get_cat_id"),
-
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

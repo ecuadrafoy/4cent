@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView
 from django import forms
@@ -12,6 +13,7 @@ from .models import Traffic, event_type
 from .tables import TrafficTable
 from .forms import TrafficForm, CategoryForm
 
+@login_required()
 def trafficIndex(request):
     traffics = Traffic.objects.all()
     common_tags = Traffic.tags.most_common()[:4]
@@ -20,7 +22,6 @@ def trafficIndex(request):
     return render(request, 
                   'logger/traffic/list.html', 
                   context)
-
 
 def TagView(request, tag_slug):
     tag = get_object_or_404(Tag, slug=tag_slug)
@@ -32,8 +33,7 @@ def TagView(request, tag_slug):
     return render(request, 
                   'logger/traffic/list.html',
                    context)
-
-
+@login_required()
 def traffic_detail(request, traffic_post):
     traffic_post = get_object_or_404(Traffic,
                                      traffic_slug = traffic_post,
@@ -41,20 +41,24 @@ def traffic_detail(request, traffic_post):
     return render(request,'logger/traffic/detail.html', 
                 {'traffic_post':traffic_post})
 
+
 class TrafficListView(SingleTableView):
     model = Traffic
     table_class = TrafficTable
     template_name = 'logger/traffic.html'
   
-    
-
+@login_required()
 def add_traffic(request):
     if request.method == 'POST':
         form = TrafficForm(request.POST)
         if form.is_valid():
-            form.save()
+            traffic = form.save(commit=False)
+            traffic.user = request.user
+            traffic.save()
             form = TrafficForm()
+            messages.success(request, 'Submission Successful')
         else:
+            messages.error(request, 'Failed submission, please verify')
             return render(request, 'logger/submit.html',
                           {'form':form})
     # If the form is invalid, show empty form

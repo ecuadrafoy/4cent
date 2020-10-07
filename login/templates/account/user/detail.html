@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ user.get_full_name }}{% endblock %}
+{% block content %}
+<h1>{{ user.get_full_name }}</h1>
+<div>
+
+    Traffic Submissions:
+    {% for traffic in traffics %}
+    <h3 class="my-1">
+        <a href="{% url 'logger:traffic_detail' traffic.traffic_slug %}">{{traffic.docname}}</a>
+    </h3>
+    {% endfor %}
+</div>
+
+{% endblock %}
