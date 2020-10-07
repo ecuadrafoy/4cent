@@ -85,8 +85,12 @@ WSGI_APPLICATION = 'collator.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '4cent',
+        'USER': '4centadmin',
+        'PASSWORD': 'admin',    
     }
 }
 
