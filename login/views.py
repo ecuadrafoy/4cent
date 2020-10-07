@@ -1,12 +1,14 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.contrib.auth import authenticate,login
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile
-
+from logger.models import Traffic
 
 def user_login(request):
     if request.method == 'POST':
@@ -52,6 +54,15 @@ def register(request):
                   'account/register.html', 
                   {'user_form':user_form})
     
+def validate_username(request):
+    """Check username availability"""
+    username = request.GET.get('username', None)
+    response = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    return JsonResponse(response)
+    
+    
 @login_required
 def edit(request):
     if request.method == 'POST':
@@ -73,5 +84,23 @@ def edit(request):
                   'account/edit.html', 
                   {'user_form':user_form,
                    'profile_form': profile_form})
-            
-            
+
+@login_required
+def user_list(request):
+    users = User.objects.filter(is_active=True)
+    return render(request,
+                  'account/user/list.html', 
+                  {'section': 'people',
+                   'users': users})
+@login_required
+def user_detail(request, username):
+    user = get_object_or_404(User, 
+                             username=username,
+                             is_active=True)
+    logged_user = request.user
+    user_posts = Traffic.objects.filter(user = user)
+    return render(request,
+                  'account/user/detail.html',
+                  {'section': 'people',
+                   'user': user, 
+                   'traffics': user_posts})    

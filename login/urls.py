@@ -20,4 +20,11 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     
     path('edit/', views.edit, name='edit'),
+    
+    path('validate_username', views.validate_username, name='validate_username'),
+    
+    #User account details
+    path('users/', views.user_list, name='user_list'),
+    path('users/<username>/', views.user_detail, name='user_detail'),
+    
 ]

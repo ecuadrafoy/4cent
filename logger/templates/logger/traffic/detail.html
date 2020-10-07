@@ -26,8 +26,10 @@
         {% else %}
         Status for this traffic is currently: <p class="text-warning">{{ traffic_post.status }} </p>
         {% endif %}
-
       </h5>
+      <h6>
+        <p> Traffic submit by {{user.first_name}} </p>
+      </h6>
       <hr>
       <p class="tags">
         Tags:

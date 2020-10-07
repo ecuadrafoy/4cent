@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.conf import settings
 import datetime
 
 from taggit.managers import TaggableManager
@@ -81,6 +82,8 @@ class Traffic(models.Model):
         ('to_verify', 'To Verify')
     )
     #Entry = models.IntegerField(primary_key=True, default=1)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                            on_delete=models.CASCADE)
     docname = models.CharField(max_length=100,
                                help_text='Enter title of document',
                                default="")
@@ -102,7 +105,7 @@ class Traffic(models.Model):
     def save(self, *args, **kwargs):
         self.traffic_slug = slugify(self.docname)
         super(Traffic, self).save(*args, **kwargs)
-    
+
 
 
     #completed = CompletedManager()

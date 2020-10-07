@@ -41,6 +41,7 @@ def traffic_detail(request, traffic_post):
     return render(request,'logger/traffic/detail.html', 
                 {'traffic_post':traffic_post})
 
+
 class TrafficListView(SingleTableView):
     model = Traffic
     table_class = TrafficTable
@@ -51,9 +52,13 @@ def add_traffic(request):
     if request.method == 'POST':
         form = TrafficForm(request.POST)
         if form.is_valid():
-            form.save()
+            traffic = form.save(commit=False)
+            traffic.user = request.user
+            traffic.save()
             form = TrafficForm()
+            messages.success(request, 'Submission Successful')
         else:
+            messages.error(request, 'Failed submission, please verify')
             return render(request, 'logger/submit.html',
                           {'form':form})
     # If the form is invalid, show empty form
