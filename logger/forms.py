@@ -1,7 +1,7 @@
 from django.forms import ModelForm, Textarea, TextInput, DateTimeInput, HiddenInput
 from bootstrap_datepicker_plus import DateTimePickerInput
 from .models import Traffic, event_type
-
+import re
 
 class TrafficForm(ModelForm):
     class Meta:
@@ -28,6 +28,8 @@ class TrafficForm(ModelForm):
             'tags': TextInput(attrs={'data-role': 'tagsinput'})
          
         }
+
+        
 
 class CategoryForm(ModelForm):
     class Meta:

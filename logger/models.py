@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from django.conf import settings
+from django.core.validators import RegexValidator
 import datetime
 
 from taggit.managers import TaggableManager
@@ -94,7 +95,13 @@ class Traffic(models.Model):
                                  on_delete=models.CASCADE, blank=True, null=True)
     fulltext = models.TextField(help_text='Enter the full traffic text if possible')
     grids = models.CharField(max_length=40, help_text='Assign grid location', 
-                            blank=True)
+                            blank=True, validators=[
+                                RegexValidator(
+                                    regex="^\d{1,2}[^ABIOYZabioyz][A-Za-z]{2}([0-9][0-9])+$",
+                                    message='Please enter a valid MGRS Coordinate.',
+                                    code='invalid_coordinate',
+                                )
+                            ])
     source = models.ForeignKey(Source, on_delete=models.CASCADE,
                                blank=True, null=True)
     PIR = models.ForeignKey(PIR, blank=True, 
