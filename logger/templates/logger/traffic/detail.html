@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
 {{ traffic_post.docname }}
@@ -27,9 +28,6 @@
         Status for this traffic is currently: <p class="text-warning">{{ traffic_post.status }} </p>
         {% endif %}
       </h5>
-      <h6>
-        <p> Traffic submit by {{user.first_name}} </p>
-      </h6>
       <hr>
       <p class="tags">
         Tags:
@@ -53,11 +51,28 @@
   </div>
 </div>
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
+{% for note in notes  %}
+  <div class="note">
+    <p class="info">
+      Comment {{ forloop.counter }} by {{ note.user }}
+      {{ note.created_on }}
+    </p>
+    <h2> {{ note.title }} </h2>
+    {{ note.body|linebreaks }}
+  </div>
+{% empty %}
+  <p>There are no comments yet.</p>
+{% endfor %}
+
+{% if new_note %}
+  <h2>Your comment has been added.</h2>
+{% else %}
+  <h2>Add a new comment</h2>
+  <form action="." method="post">
+    {{ note_form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Add comment"></p>
+  </form>
 {% endif %}
+
 {% endblock %}

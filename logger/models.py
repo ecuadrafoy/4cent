@@ -180,3 +180,20 @@ class EventMatrix(models.Model):
 
     def __str__(self):
         return self.reference
+    
+class Notes(models.Model):
+    traffic = models.ForeignKey(Traffic, 
+                                on_delete=models.CASCADE,
+                                related_name = 'notes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                            on_delete=models.CASCADE, blank=True)
+    title = models.CharField(max_length=50)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+    class Meta:
+        ordering = ['-created_on']
+        
+    def __str__(self):
+        return 'Comment {} by {}' .format(self.title, self.user)
+

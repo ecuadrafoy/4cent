@@ -9,9 +9,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from taggit.models import Tag
 
-from .models import Traffic, event_type
+from .models import Traffic, event_type, Notes
 from .tables import TrafficTable
-from .forms import TrafficForm, CategoryForm
+from .forms import TrafficForm, CategoryForm, NoteForm
 
 @login_required()
 def trafficIndex(request):
@@ -33,13 +33,39 @@ def TagView(request, tag_slug):
     return render(request, 
                   'logger/traffic/list.html',
                    context)
+    
 @login_required()
 def traffic_detail(request, traffic_post):
     traffic_post = get_object_or_404(Traffic,
-                                     traffic_slug = traffic_post,
-                                     )
-    return render(request,'logger/traffic/detail.html', 
-                {'traffic_post':traffic_post})
+                                     traffic_slug = traffic_post)
+    #adding the comment section after this
+    notes = traffic_post.notes.filter(active = True)
+    new_note = None
+    if request.method == 'POST':
+        note_form = NoteForm(data=request.POST)
+        if note_form.is_valid():
+            new_note = note_form.save(commit=False)
+            new_note.user = request.user
+            new_note.traffic = traffic_post
+            new_note.save()
+            note_form = NoteForm()
+            messages.success(request, 'Note added successfully')
+        else:
+            messages.error(request, 'Failed submission, please verify')
+            return render(request,
+                'logger/traffic/detail.html', 
+                {'traffic_post':traffic_post,
+                 'notes':notes,
+                 'new_note':new_note,
+                 'note_form':note_form})
+    else:
+        note_form = NoteForm()
+    return render(request,
+                'logger/traffic/detail.html', 
+                {'traffic_post':traffic_post,
+                 'notes':notes,
+                 'new_note':new_note,
+                 'note_form':note_form})
 
 
 class TrafficListView(SingleTableView):
@@ -66,6 +92,8 @@ def add_traffic(request):
         form = TrafficForm()
     return render(request, 'logger/submit.html', 
                   {'form': form})
+    
+
 
 def EventCreatePop(request):
     form = CategoryForm(request.POST or None)
