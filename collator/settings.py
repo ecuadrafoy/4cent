@@ -87,8 +87,7 @@ WSGI_APPLICATION = 'collator.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    if 'RDS_DB_NAME' in os.environ:
+if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -100,17 +99,18 @@ DATABASES = {
         }
     }
 else:
-    'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '4cent',
-        'USER': '4centadmin',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost', 
-        'PORT': '5432',   
+    DATABASES = {
+        'default': {
+            #'ENGINE': 'django.db.backends.sqlite3',
+            #'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': '4cent',
+            'USER': '4centadmin',
+            'PASSWORD': 'admin',
+            'HOST': 'localhost', 
+            'PORT': '5432',   
+        }
     }
-}
 
 
 # Password validation
