@@ -81,6 +81,7 @@ def add_traffic(request):
             traffic = form.save(commit=False)
             traffic.user = request.user
             traffic.save()
+            form.save_m2m()
             form = TrafficForm()
             messages.success(request, 'Submission Successful')
         else:

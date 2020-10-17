@@ -6,7 +6,7 @@ import re
 class TrafficForm(ModelForm):
     class Meta:
         model = Traffic
-        fields = ('docname', 'docdate','category','grids', 'source', 'PIR', 'status','fulltext','tags',)
+        fields = ('docname', 'docdate','category','grids', 'source', 'PIR', 'status','fulltext','tags')
         help_texts={
             'docname': None,
             'grids': None,

@@ -1,78 +1,76 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
-{% load static %}
-{% block title %}
-{{ traffic_post.docname }}
-{% endblock %}
-{% block content %}
-<!--Page Content-->
-<div class="container">
-  <div class="row align-items-center">
-    <div class="col-3">
-      <img class="img-fluid" , src="{% static "images/No_image_available.png" %}">
-    </div>
-    <div class="col-lg-8">
-      <h2 class="mt-4">{{ traffic_post.docname }}
-        <hr>
-        <p>
+  {% extends "base.html" %}
+  {% load crispy_forms_tags %}
+  {% load static %}
+  {% block title %}
+  {{ traffic_post.docname }}
+  {% endblock %}
+  {% block content %}
+  <!--Page Content-->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-title">{{ traffic_post.docname }}</h1>
+        <h2 class="mt-4">
           <small> {{ traffic_post.docdate }} </small>
-        </p>
-      </h2>
-      <h5>
-        <p>This traffic answers {{ traffic_post.PIR }} </p>
-        {% if traffic_post.status == 'completed' %}
-        Status for this traffic is currently: <p class="text-white bg-dark">{{ traffic_post.status }} </p>
-        {% elif traffic_post.status == 'live' %}
-        Status for this traffic is currently: <p class="text-danger">{{ traffic_post.status }} </p>
-        {% else %}
-        Status for this traffic is currently: <p class="text-warning">{{ traffic_post.status }} </p>
-        {% endif %}
-      </h5>
-      <hr>
-      <p class="tags">
-        Tags:
-        {% for tag in traffic_post.tags.all %}
-        <a href="{% url "logger:tagged_traffic" tag.slug %}" class="badge badge-info"> {{ tag }}</a>
-        {% if not forloop.last %}, {% endif %}
+          <h5>
+            <p>This traffic answers {{ traffic_post.PIR }} </p>
+            {% if traffic_post.status == 'completed' %}
+            Status for this traffic is currently: <p class="text-white bg-dark">{{ traffic_post.status }} </p>
+            {% elif traffic_post.status == 'live' %}
+            Status for this traffic is currently: <p class="text-danger bg-yellow">{{ traffic_post.status }} </p>
+            {% else %}
+            Status for this traffic is currently: <p class="text-warning">{{ traffic_post.status }} </p>
+            {% endif %}
+          </h5>
+          <hr>
+          <p class="tags">
+            Tags:
+            {% for tag in traffic_post.tags.all %}
+            <a href="{% url "logger:tagged_traffic" tag.slug %}" class="badge badge-info"> {{ tag }}</a>
+            {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+          <p>
+            {% if traffic_post.grids %}Coordinates at: {{ traffic_post.grids }} {% else %}
+            Coordinates not submitted for this traffic
+            {% endif %}
+          </p>
+          <p>
+            Source for this information is: {{ traffic_post.source }}
+          </p>
+          <p class="lead">
+            {{ traffic_post.fulltext }}
+          </p>
+      </div>
+    </div>
+    <hr>
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        {% for note in notes  %}
+        <div class="note">
+          <p class="info">
+            Comment {{ forloop.counter }} by {{ note.user }}
+            {{ note.created_on }}
+          </p>
+          <h2> {{ note.title }} </h2>
+          {{ note.body|linebreaks }}
+        </div>
+        {% empty %}
+        <p>There are no comments yet.</p>
         {% endfor %}
-      </p>
-      <p>
-        {% if traffic_post.grids %}Coordinates at: {{ traffic_post.grids }} {% else %}
-        Coordinates not submitted for this traffic
+
+        {% if new_note %}
+        <h2>Your comment has been added.</h2>
+        {% else %}
+        <h2>Add a new comment</h2>
+        <form action="." method="post">
+          {{ note_form.as_p }}
+          {% csrf_token %}
+          <p><input type="submit" value="Add comment"></p>
+        </form>
         {% endif %}
-      </p>
-      <p>
-        Source for this information is: {{ traffic_post.source }}
-      </p>
-      <p class="lead">
-        {{ traffic_post.fulltext }}
-      </p>
+      </div>
     </div>
   </div>
-</div>
 
-{% for note in notes  %}
-  <div class="note">
-    <p class="info">
-      Comment {{ forloop.counter }} by {{ note.user }}
-      {{ note.created_on }}
-    </p>
-    <h2> {{ note.title }} </h2>
-    {{ note.body|linebreaks }}
-  </div>
-{% empty %}
-  <p>There are no comments yet.</p>
-{% endfor %}
-
-{% if new_note %}
-  <h2>Your comment has been added.</h2>
-{% else %}
-  <h2>Add a new comment</h2>
-  <form action="." method="post">
-    {{ note_form.as_p }}
-    {% csrf_token %}
-    <p><input type="submit" value="Add comment"></p>
-  </form>
-{% endif %}
-
-{% endblock %}
+  {% endblock %}
