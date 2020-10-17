@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.conf import settings
 from django.core.validators import RegexValidator
+from django.utils import timezone
 import datetime
 
 from taggit.managers import TaggableManager
@@ -90,7 +91,7 @@ class Traffic(models.Model):
                                default="")
     traffic_slug = models.SlugField(max_length=250,
                                     unique_for_date='docdate')
-    docdate = models.DateTimeField(default=datetime.datetime.now())
+    docdate = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(event_type,
                                  on_delete=models.CASCADE, blank=True, null=True)
     fulltext = models.TextField(help_text='Enter the full traffic text if possible')
