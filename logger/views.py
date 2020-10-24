@@ -4,7 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView
 from django import forms
 from django.utils import timezone
-from django_tables2 import SingleTableView
+from django_filters.views import FilterView
+from django_tables2 import SingleTableView, SingleTableMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from taggit.models import Tag
@@ -12,6 +13,7 @@ from taggit.models import Tag
 from .models import Traffic, event_type, Notes
 from .tables import TrafficTable
 from .forms import TrafficForm, CategoryForm, NoteForm
+from .filters import TrafficFilter
 
 @login_required()
 def trafficIndex(request):
@@ -68,10 +70,11 @@ def traffic_detail(request, traffic_post):
                  'note_form':note_form})
 
 
-class TrafficListView(SingleTableView):
+class TrafficListView(SingleTableMixin, FilterView):
     model = Traffic
     table_class = TrafficTable
     template_name = 'logger/traffic.html'
+    filterset_class = TrafficFilter
   
 @login_required()
 def add_traffic(request):

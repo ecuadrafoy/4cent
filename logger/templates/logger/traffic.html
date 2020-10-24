@@ -1,14 +1,36 @@
 {% extends "base.html" %}
+
 {% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
 {% block title %}Traffic Log Sheet{% endblock %}
 {% block content %}
 
-
-<div class="table">
-    <title>Traffic Log</title>
+{% if filter %}
+<div class="container pt-5">
     <div class="row">
-        {% render_table table%}
-    <div>
-</div>
+        <div class="col-lg-8">
+            {% render_table table %}
+        </div>
+        <div class="col-md-4">
+            <div class="card my-4">
+                <h5 class="card-header">Filter</h5>
+                <div class="card-body">
+                    <form action="" method="get" class="form form-inline">
+                        {% bootstrap_form filter.form layout='vertical' %}
+                        {% bootstrap_button 'filter' %}
+                    </form>
+                </div>
+            </div>
+        </div>
 
-{% endblock %}
+    </div>
+
+    {% endif %}
+
+
+
+
+
+
+    {% endblock %}

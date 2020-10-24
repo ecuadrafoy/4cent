@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'taggit',
     'easy_thumbnails',
+    'django_filters',
 
 ]
 
