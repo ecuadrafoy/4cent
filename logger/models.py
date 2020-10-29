@@ -105,8 +105,7 @@ class Traffic(models.Model):
                             ])
     source = models.ForeignKey(Source, on_delete=models.CASCADE,
                                blank=True, null=True)
-    PIR = models.ForeignKey(PIR, blank=True, 
-                            on_delete=models.CASCADE)
+    PIR = models.ManyToManyField(PIR)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES,
                               default='to_verify')
     tags = TaggableManager(blank=True)

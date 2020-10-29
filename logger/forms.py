@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Textarea, TextInput, DateTimeInput, HiddenInput
+from django.forms import ModelForm, Textarea, TextInput, DateTimeInput, HiddenInput, CheckboxSelectMultiple
 from bootstrap_datepicker_plus import DateTimePickerInput
 from .models import Traffic, event_type, Notes
 import re
@@ -25,7 +25,8 @@ class TrafficForm(ModelForm):
             'grids': TextInput(attrs={'placeholder': 'Write coordinates (MGRS)'}),
             'docdate': DateTimePickerInput(),
             'fulltext': Textarea(attrs={'placeholder': 'Enter the full traffic text if possible'}),
-            'tags': TextInput(attrs={'data-role': 'tagsinput'})
+            'tags': TextInput(attrs={'data-role': 'tagsinput'}),
+            'PIR': CheckboxSelectMultiple()
          
         }
 class NoteForm(ModelForm):

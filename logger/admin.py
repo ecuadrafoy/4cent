@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from django.forms import CheckboxSelectMultiple
 import csv, datetime
 
 from .models import Traffic, Source, Country, PIR, event_type, Organizations, Equipment, EventMatrix, Notes
@@ -44,7 +45,7 @@ export_to_csv.short_description = 'Export to CSV'  #short description
 
 @admin.register(Traffic)
 class TrafficAdmin(admin.ModelAdmin):
-	list_display = ('docname', 'traffic_slug','docdate', 'source','PIR','grids', 'status')
+	list_display = ('docname', 'traffic_slug','docdate', 'source','grids', 'status')
 	list_filter = ('status','docdate', 'source')
 	search_fields = ('docname', 'fulltext')
 	prepopulated_fields = {'traffic_slug': ('docname',)}

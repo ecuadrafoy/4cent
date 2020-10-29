@@ -13,7 +13,7 @@
         <h2 class="mt-4">
           <small> {{ traffic_post.docdate }} </small>
           <h5>
-            <p>This traffic answers {{ traffic_post.PIR }} </p>
+            <p>This traffic answers {% for PIR in traffic_post.PIR.all %} <li>{{ PIR }}</li> {% endfor %} </p>
             {% if traffic_post.status == 'completed' %}
             Status for this traffic is currently: <p class="text-white bg-dark">{{ traffic_post.status }} </p>
             {% elif traffic_post.status == 'live' %}
