@@ -9,11 +9,11 @@
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
 {{form.media}}
-<div class="card">
+<div class="card w-50 mx-auto">
   <div class="card-header">
     <h1>Send Traffic to the Database</h1>
   </div>
-  <div class="container pt-5">
+  <div class="container-fluid">
     <form id='add_traffic' method='POST' action="{% url "logger:add_traffic" %}" enctype='multipart/form-data'
       novalidate id='traffic-form'>{% csrf_token %}
       <div class='form-row'>
